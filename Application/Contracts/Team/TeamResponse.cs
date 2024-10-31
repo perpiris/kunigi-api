@@ -1,4 +1,6 @@
-﻿namespace Application.Contracts.Team;
+﻿using Application.Contracts.Game;
+
+namespace Application.Contracts.Team;
 
 public class TeamResponse
 {
@@ -23,4 +25,8 @@ public class TeamResponse
     public string? Instagram { get; set; }
     
     public string? ProfileImagePath { get; set; }
+
+    public List<ParentGameResponse> WonGames { get; set; } = null!;
+
+    public List<ParentGameResponse> HostedGames { get; set; } = null!;
 }

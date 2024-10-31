@@ -50,7 +50,7 @@ public class TeamService : ITeamService
     {
         var result = await _context.Teams.FindAsync(id);
         return result == null
-            ? Result<TeamResponse>.Failure("Team not found")
+            ? Result<TeamResponse>.Failure("Η ομάδα δεν βρέθηκε")
             : Result<TeamResponse>.Success(result.ToTeamResponse());
     }
 

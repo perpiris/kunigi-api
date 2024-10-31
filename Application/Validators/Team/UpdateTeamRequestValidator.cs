@@ -17,44 +17,31 @@ public class UpdateTeamRequestValidator : AbstractValidator<UpdateTeamRequest>
             .NotEmpty()
             .WithMessage("Team Id is required")
             .MustAsync(ExistInDatabase)
-            .WithMessage("Team not found");
-
-        RuleFor(x => x.Description)
-            .MaximumLength(500)
-            .WithMessage("Description cannot exceed 500 characters")
-            .When(x => x.Description != null);
+            .WithMessage("Η ομάδα δεν βρέθηκε");
 
         RuleFor(x => x.CreatedYear)
-            .InclusiveBetween((short)1800, (short)DateTime.UtcNow.Year)
-            .WithMessage($"Created year must be between 1800 and {DateTime.UtcNow.Year}")
+            .InclusiveBetween((short)1990, (short)DateTime.UtcNow.Year)
+            .WithMessage($"Created year must be between 1990 and {DateTime.UtcNow.Year}")
             .When(x => x.CreatedYear.HasValue);
 
         RuleFor(x => x.Website)
             .MaximumLength(150)
-            .WithMessage("Website URL cannot exceed 150 characters")
-            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
-            .WithMessage("Website must be a valid URL")
+            .WithMessage("Το πεδίο δεν μπορεί να ξεπεράσει τους 150 χαρακτήρες")
             .When(x => !string.IsNullOrEmpty(x.Website));
 
         RuleFor(x => x.Facebook)
             .MaximumLength(150)
-            .WithMessage("Facebook URL cannot exceed 150 characters")
-            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
-            .WithMessage("Facebook must be a valid URL")
+            .WithMessage("Το πεδίο δεν μπορεί να ξεπεράσει τους 150 χαρακτήρες")
             .When(x => !string.IsNullOrEmpty(x.Facebook));
 
         RuleFor(x => x.Youtube)
             .MaximumLength(150)
-            .WithMessage("Youtube URL cannot exceed 150 characters")
-            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
-            .WithMessage("Youtube must be a valid URL")
+            .WithMessage("Το πεδίο δεν μπορεί να ξεπεράσει τους 150 χαρακτήρες")
             .When(x => !string.IsNullOrEmpty(x.Youtube));
 
         RuleFor(x => x.Instagram)
             .MaximumLength(150)
-            .WithMessage("Instagram URL cannot exceed 150 characters")
-            .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out _))
-            .WithMessage("Instagram must be a valid URL")
+            .WithMessage("Το πεδίο δεν μπορεί να ξεπεράσει τους 150 χαρακτήρες")
             .When(x => !string.IsNullOrEmpty(x.Instagram));
     }
 

@@ -19,7 +19,9 @@ public static class TeamMappings
             Facebook = team.Facebook,
             Youtube = team.Youtube,
             Instagram = team.Instagram,
-            ProfileImagePath = team.ProfileImagePath
+            ProfileImagePath = team.ProfileImagePath,
+            WonGames = [],
+            HostedGames = []
         };
     }
 }

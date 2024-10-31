@@ -33,4 +33,8 @@ public class Team
     
     [MaxLength(150)]
     public string? ProfileImagePath { get; set; }
+    
+    public ICollection<ParentGame> HostedGames { get; set; } = new HashSet<ParentGame>();
+
+    public ICollection<ParentGame> WonGames { get; set; } = new HashSet<ParentGame>();
 }

@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         
         services.AddScoped<ITeamService, TeamService>();
+        services.AddScoped<IGameService, GameService>();
         
         return services;
     }
