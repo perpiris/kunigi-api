@@ -45,6 +45,13 @@ public class TeamController : ControllerBase
         var result = await _teamService.GetPagedTeams(pageNumber, pageSize);
         return Ok(result);
     }
+    
+    [HttpGet("select-list")]
+    public async Task<IActionResult> GetTeamSelectList()
+    {
+        var result = await _teamService.GetTeamSelectList();
+        return Ok(result);
+    }
 
     [HttpPut]
     public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request)

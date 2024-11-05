@@ -11,5 +11,7 @@ public interface ITeamService
 
     Task<PagedList<TeamResponse>> GetPagedTeams(int pageNumber, int pageSize);
     
+    Task<List<SelectListItem>> GetTeamSelectList();
+    
     Task<Result> UpdateTeam(UpdateTeamRequest request);
 }

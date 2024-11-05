@@ -95,4 +95,9 @@ public class TeamService : ITeamService
         await _context.SaveChangesAsync(CancellationToken.None);
         return Result.Success();
     }
+
+    public async Task<List<SelectListItem>> GetTeamSelectList()
+    {
+        return await _context.Teams.Select(x => x.ToSelectListItem()).ToListAsync();
+    }
 }

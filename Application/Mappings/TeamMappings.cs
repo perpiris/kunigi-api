@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Team;
+﻿using Application.Contracts.Common;
+using Application.Contracts.Team;
 using Domain.Entities;
 
 namespace Application.Mappings;
@@ -22,6 +23,15 @@ public static class TeamMappings
             ProfileImagePath = team.ProfileImagePath,
             WonGames = [],
             HostedGames = []
+        };
+    }
+
+    public static SelectListItem ToSelectListItem(this Team team)
+    {
+        return new SelectListItem
+        {
+            Id = team.TeamId.ToString(),
+            Label = team.Name,
         };
     }
 }
