@@ -13,5 +13,5 @@ public interface ITeamService
     
     Task<List<SelectListItem>> GetTeamSelectList();
     
-    Task<Result> UpdateTeam(UpdateTeamRequest request);
+    Task<Result> UpdateTeam(UpdateTeamRequest request, Stream? profileImageStream);
 }

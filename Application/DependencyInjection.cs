@@ -13,6 +13,8 @@ public static class DependencyInjection
         
         services.AddScoped<ITeamService, TeamService>();
         services.AddScoped<IGameService, GameService>();
+        services.AddScoped<IFileManagerService, FileManagerService>();
+        services.AddScoped<IdentityService, IdentityService>();
         
         return services;
     }

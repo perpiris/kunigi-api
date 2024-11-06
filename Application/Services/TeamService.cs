@@ -12,15 +12,18 @@ namespace Application.Services;
 public class TeamService : ITeamService
 {
     private readonly IDataContext _context;
+    private readonly IFileManagerService _fileManagerService;
     private readonly IValidator<CreateTeamRequest> _createTeamValidator;
     private readonly IValidator<UpdateTeamRequest> _updateTeamValidator;
 
     public TeamService(
         IDataContext context,
+        IFileManagerService fileManagerService,
         IValidator<CreateTeamRequest> createTeamValidator,
         IValidator<UpdateTeamRequest> updateTeamValidator)
     {
         _context = context;
+        _fileManagerService = fileManagerService;
         _createTeamValidator = createTeamValidator;
         _updateTeamValidator = updateTeamValidator;
     }
@@ -33,12 +36,15 @@ public class TeamService : ITeamService
             return Result.Failure(validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
         }
 
+        var slug = SlugGenerator.GenerateSlug(request.Name.Trim());
         var newTeam = new Team
         {
             Name = request.Name.Trim(),
-            Slug = SlugGenerator.GenerateSlug(request.Name.Trim()),
+            Slug = slug,
             IsActive = request.IsActive
         };
+        
+        _fileManagerService.CreateFolder($"teams/{slug}");
 
         _context.Teams.Add(newTeam);
         await _context.SaveChangesAsync(CancellationToken.None);
@@ -73,8 +79,13 @@ public class TeamService : ITeamService
             TotalItems = totalItems
         };
     }
+    
+    public async Task<List<SelectListItem>> GetTeamSelectList()
+    {
+        return await _context.Teams.Select(x => x.ToSelectListItem()).ToListAsync();
+    }
 
-    public async Task<Result> UpdateTeam(UpdateTeamRequest request)
+    public async Task<Result> UpdateTeam(UpdateTeamRequest request, Stream? profileImageStream)
     {
         var validationResult = await _updateTeamValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
@@ -92,12 +103,13 @@ public class TeamService : ITeamService
         team.Youtube = request.Youtube?.Trim();
         team.Instagram = request.Instagram?.Trim();
 
+        if (profileImageStream is not null)
+        {
+            var profileImagePath = await _fileManagerService.SaveFile(profileImageStream, $"teams/{team.Slug.Trim()}");
+            team.ProfileImagePath = profileImagePath;
+        }
+
         await _context.SaveChangesAsync(CancellationToken.None);
         return Result.Success();
-    }
-
-    public async Task<List<SelectListItem>> GetTeamSelectList()
-    {
-        return await _context.Teams.Select(x => x.ToSelectListItem()).ToListAsync();
     }
 }
