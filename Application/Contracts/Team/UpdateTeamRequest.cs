@@ -17,6 +17,4 @@ public class UpdateTeamRequest
     public string? Youtube { get; set; }
     
     public string? Instagram { get; set; }
-    
-    public string? ProfileImagePath { get; set; }
 }

@@ -54,9 +54,9 @@ public class TeamController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request, IFormFile profileImage)
+    public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request)
     {
-        var result = await _teamService.UpdateTeam(request, profileImage.OpenReadStream());
+        var result = await _teamService.UpdateTeam(request);
         if (!result.IsSuccess)
         {
             return BadRequest(result.Errors);

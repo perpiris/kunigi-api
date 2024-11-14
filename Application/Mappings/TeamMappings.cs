@@ -6,9 +6,9 @@ namespace Application.Mappings;
 
 public static class TeamMappings
 {
-    public static TeamResponse ToTeamResponse(this Team team)
+    public static TeamResponse ToTeamResponse(this Team team, bool includeAll)
     {
-        return new TeamResponse
+        var response = new TeamResponse
         {
             TeamId = team.TeamId,
             Name = team.Name,
@@ -24,6 +24,14 @@ public static class TeamMappings
             WonGames = [],
             HostedGames = []
         };
+
+        if (includeAll)
+        {
+            response.WonGames = team.WonGames.Select(x => x.ToParentGameResponse(false)).ToList();
+            response.HostedGames = team.HostedGames.Select(x => x.ToParentGameResponse(false)).ToList();
+        }
+
+        return response;
     }
 
     public static SelectListItem ToSelectListItem(this Team team)

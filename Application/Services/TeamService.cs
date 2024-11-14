@@ -54,10 +54,14 @@ public class TeamService : ITeamService
 
     public async Task<Result<TeamResponse>> GetTeamById(Guid id)
     {
-        var result = await _context.Teams.FindAsync(id);
+        var result = await _context.Teams
+            .Include(x => x.WonGames)
+            .Include(x => x.HostedGames)
+            .FirstOrDefaultAsync(x => x.TeamId == id);
+        
         return result == null
             ? Result<TeamResponse>.Failure("Η ομάδα δεν βρέθηκε")
-            : Result<TeamResponse>.Success(result.ToTeamResponse());
+            : Result<TeamResponse>.Success(result.ToTeamResponse(true));
     }
 
     public async Task<PagedList<TeamResponse>> GetPagedTeams(int pageNumber, int pageSize)
@@ -68,7 +72,7 @@ public class TeamService : ITeamService
         var teams = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(x => x.ToTeamResponse())
+            .Select(x => x.ToTeamResponse(false))
             .ToListAsync();
 
         return new PagedList<TeamResponse>
@@ -85,7 +89,7 @@ public class TeamService : ITeamService
         return await _context.Teams.Select(x => x.ToSelectListItem()).ToListAsync();
     }
 
-    public async Task<Result> UpdateTeam(UpdateTeamRequest request, Stream? profileImageStream)
+    public async Task<Result> UpdateTeam(UpdateTeamRequest request)
     {
         var validationResult = await _updateTeamValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
@@ -103,12 +107,13 @@ public class TeamService : ITeamService
         team.Youtube = request.Youtube?.Trim();
         team.Instagram = request.Instagram?.Trim();
 
-        if (profileImageStream is not null)
-        {
-            var profileImagePath = await _fileManagerService.SaveFile(profileImageStream, $"teams/{team.Slug.Trim()}");
-            team.ProfileImagePath = profileImagePath;
-        }
+        // if (profileImageStream is not null)
+        // {
+        //     var profileImagePath = await _fileManagerService.SaveFile(profileImageStream, $"teams/{team.Slug.Trim()}");
+        //     team.ProfileImagePath = profileImagePath;
+        // }
 
+        _context.Teams.Update(team);
         await _context.SaveChangesAsync(CancellationToken.None);
         return Result.Success();
     }
